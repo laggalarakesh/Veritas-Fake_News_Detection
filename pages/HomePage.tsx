@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { AnalysisResult, AnalysisMode } from '../types';
 import ResultCard from '../components/ResultCard';
-import { UploadIcon, PaperclipIcon, CloseIcon, ResetIcon } from '../components/icons';
+import { DownloadToDesktopIcon, PaperclipIcon, CloseIcon, ResetIcon } from '../components/icons';
 
 interface HomePageProps {
   result: AnalysisResult | null;
@@ -136,7 +136,7 @@ const HomePage: React.FC<HomePageProps> = ({ result, isLoading, error, handleSub
                                         className="absolute top-1/2 right-3 -translate-y-1/2 p-2 rounded-full text-gray-400 hover:text-neon-cyan hover:bg-white/10 transition-all duration-300 animate-pulse-glow focus:outline-none focus:ring-2 focus:ring-neon-cyan"
                                         aria-label="Upload file for legal check"
                                     >
-                                        <UploadIcon className="w-6 h-6" />
+                                        <DownloadToDesktopIcon className="w-6 h-6" />
                                     </button>
                                     <input
                                         ref={inputRef}

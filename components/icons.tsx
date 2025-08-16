@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 // ThemeToggle Icons are kept as they are, not fitting the line-art style
@@ -41,6 +40,26 @@ export const QuestionMarkCircleIcon = ({ className }: { className?: string }) =>
 
 export const UploadIcon = ({ className }: { className?: string }) => (
     <svg className={className} {...iconProps}><path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" /></svg>
+);
+
+export const DownloadToDesktopIcon = ({ className }: { className?: string }) => (
+    <svg className={className} {...iconProps}>
+        {/* Screen */}
+        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 15.75V8.25a2.25 2.25 0 012.25-2.25h10.5a2.25 2.25 0 012.25 2.25v7.5" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 15.75h4.5l3-3 3 3h4.5" />
+        
+        {/* Laptop Base */}
+        <path strokeLinecap="round" strokeLinejoin="round" d="M3 18.75h18" />
+
+        {/* Arrow */}
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v9.75" />
+        <path strokeLinecap="round" strokeLinejoin="round"d="M15 9.75L12 12.75 9 9.75" />
+
+        {/* Dots */}
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6h.008v.008H12V6z" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6h.008v.008h-.008V6z" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6h.008v.008h-.008V6z" />
+    </svg>
 );
 
 export const ResetIcon = ({ className }: { className?: string }) => (
