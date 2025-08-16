@@ -1,0 +1,7 @@
+{
+  "name": "Veritas AI: Fact & Law Checker",
+  "description": "An AI-powered assistant for fact-checking claims and answering law-related questions with structured, evidence-based responses. It provides clarity, neutrality, and context to help users make informed decisions.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
