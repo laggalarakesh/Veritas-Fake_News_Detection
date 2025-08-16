@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { AnalysisResult, AnalysisMode } from '../types';
 import ResultCard from '../components/ResultCard';
@@ -89,8 +90,7 @@ const HomePage: React.FC<HomePageProps> = ({ result, isLoading, error, handleSub
             </div>
           ) : error ? (
             <div className="p-6 glass-card border-red-500/50 border animate-fade-in text-center">
-              <strong className="font-bold text-red-400">An Error Occurred:</strong>
-              <p className="mt-1 text-red-300">{error}</p>
+              <p className="mt-1 text-red-300 text-lg">⚠️ Service busy, try again.</p>
               <button
                 onClick={handleReset}
                 className="mt-6 flex items-center mx-auto space-x-2 px-6 py-2 bg-white/10 text-white font-bold rounded-full hover:bg-white/20 focus:ring-4 focus:outline-none focus:ring-cyan-300/50 transition-all transform hover:scale-105 shadow-lg"

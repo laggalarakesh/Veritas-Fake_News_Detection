@@ -2,19 +2,26 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { QueryResult, LegalQueryResult } from '../types';
 
-const API_KEY = process.env.API_KEY;
+// Lazily initialize the AI client to prevent load-time errors.
+let ai: GoogleGenAI | null = null;
+const getAiClient = () => {
+    if (!ai) {
+        const API_KEY = process.env.API_KEY;
+        if (!API_KEY) {
+            // This error will be caught by the calling function's try-catch block.
+            throw new Error("API_KEY environment variable not set");
+        }
+        ai = new GoogleGenAI({ apiKey: API_KEY });
+    }
+    return ai;
+};
 
-if (!API_KEY) {
-  throw new Error("API_KEY environment variable not set");
-}
-
-const ai = new GoogleGenAI({ apiKey: API_KEY });
 
 // --- FACT CHECK SERVICE ---
 const factCheckResponseSchema = {
   type: Type.OBJECT,
   properties: {
-    result: { type: Type.STRING, description: "The final verdict: 'Original' or 'Fake'. If uncertain, use 'Insufficient data'." },
+    result: { type: Type.STRING, description: "The final verdict: 'True' or 'False'. If uncertain, use 'Insufficient data'." },
     confidence: { type: Type.STRING, description: "Confidence level: 'High', 'Medium', or 'Low'. If uncertain, use 'N/A'." },
     detailedExplanation: { type: Type.STRING, description: "A clear, human-style explanation written for a general user. Always provide this." },
     accuracyScore: { type: Type.NUMBER, description: "A numerical score from 0 to 100 representing the confidence in the verification." }
@@ -22,12 +29,12 @@ const factCheckResponseSchema = {
   required: ["result", "confidence", "detailedExplanation", "accuracyScore"]
 };
 
-const factCheckSystemInstruction = `You are a Legal-Aware Fact Verification AI system. Your task is to analyze the user’s input (text, links) and determine whether the content is original, trustworthy, or fake.
+const factCheckSystemInstruction = `You are a Fact Verification AI system called Veritas AI. Your task is to analyze the user’s input (text, links) and determine whether the content is true or fake.
 
 For each input:
 1. Summarize the main claim in 2-3 sentences. Then verify credibility using available fact-checking logic.
 2. Provide output ONLY in the requested JSON structure.
-   - Result: 'Original' or 'Fake'
+   - Result: 'True' or 'False'
    - Confidence: 'High' / 'Medium' / 'Low'
    - Detailed Explanation: A clear, human-style explanation.
    - accuracyScore: An integer score from 0 to 100 representing your confidence in the analysis.
@@ -36,7 +43,8 @@ For each input:
 
 export const getAnalysis = async (userInput: string): Promise<QueryResult> => {
   try {
-    const response = await ai.models.generateContent({
+    const aiClient = getAiClient();
+    const response = await aiClient.models.generateContent({
       model: "gemini-2.5-flash",
       contents: `Please analyze the following user input: "${userInput}"`,
       config: {
@@ -50,12 +58,7 @@ export const getAnalysis = async (userInput: string): Promise<QueryResult> => {
     return JSON.parse(text) as QueryResult;
   } catch (error) {
     console.error("Error fetching analysis from Gemini API:", error);
-    return {
-        result: 'Insufficient data',
-        confidence: 'N/A',
-        detailedExplanation: "Failed to get a valid response from the AI. The service may be unavailable or the request could not be processed. Please check your connection and try again.",
-        accuracyScore: 0
-    };
+    throw new Error("Service busy, try again.");
   }
 };
 
@@ -107,6 +110,7 @@ const fileToGenerativePart = async (file: File) => {
 
 export const getLegalAnalysis = async (userInput: { text: string; file?: File }): Promise<LegalQueryResult> => {
     try {
+        const aiClient = getAiClient();
         const { text, file } = userInput;
         
         let contents: any;
@@ -118,7 +122,7 @@ export const getLegalAnalysis = async (userInput: { text: string; file?: File })
             contents = `Please perform a legal fact-check on the following user input: "${text}"`;
         }
 
-        const response = await ai.models.generateContent({
+        const response = await aiClient.models.generateContent({
           model: "gemini-2.5-flash",
           contents: contents,
           config: {
@@ -132,11 +136,6 @@ export const getLegalAnalysis = async (userInput: { text: string; file?: File })
         return JSON.parse(responseText) as LegalQueryResult;
     } catch (error) {
         console.error("Error fetching legal analysis from Gemini API:", error);
-        return {
-            verdict: 'Needs Further Verification',
-            reason: "Failed to get a valid response from the AI for the legal check. The service may be unavailable or the request could not be processed.",
-            summary: "An error occurred while trying to process the legal check.",
-            accuracyScore: 0
-        };
+        throw new Error("Service busy, try again.");
     }
 };

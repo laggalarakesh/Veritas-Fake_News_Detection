@@ -47,13 +47,15 @@ const CircularProgress = ({ score, mode }: { score: number, mode: AnalysisMode }
 const FactCheckResult: React.FC<{ result: QueryResult }> = ({ result }) => {
   const { result: verdict, confidence, detailedExplanation, accuracyScore } = result;
 
+  const displayVerdict = verdict === 'False' ? 'Fake' : verdict;
+
   const verdictConfig = {
-    'Original': {
+    'True': {
       icon: <CheckCircleIcon className="w-8 h-8 text-emerald-green-500" />,
       color: 'text-emerald-green-500',
       borderColor: 'border-emerald-green-500/30',
     },
-    'Fake': {
+    'False': {
       icon: <XCircleIcon className="w-8 h-8 text-crimson-red-500" />,
       color: 'text-crimson-red-500',
       borderColor: 'border-crimson-red-500/30',
@@ -71,16 +73,16 @@ const FactCheckResult: React.FC<{ result: QueryResult }> = ({ result }) => {
             <div className={`flex-grow p-4 rounded-xl border-l-4 ${verdictConfig.borderColor} bg-black/5 dark:bg-white/5`}>
                 <div className="flex items-center">
                     {verdictConfig.icon}
-                    <h2 className={`ml-3 text-2xl font-bold ${verdictConfig.color}`}>{verdict}</h2>
+                    <h2 className={`ml-3 text-2xl font-bold ${verdictConfig.color}`}>{displayVerdict}</h2>
                 </div>
                  <div className="mt-2 text-text-secondary dark:text-gray-300">
-                    <span className="text-sm font-medium opacity-80">Confidence: </span>
+                    <span className="text-sm font-medium opacity-80">Confidence Level: </span>
                     <span className="font-semibold text-lg">{confidence}</span>
                 </div>
             </div>
             <div className="flex flex-col items-center">
                 <CircularProgress score={accuracyScore} mode="fact" />
-                <h3 className="mt-1 text-sm font-medium text-text-secondary">Accuracy Score</h3>
+                <h3 className="mt-1 text-sm font-medium text-text-secondary">Confidence: {accuracyScore}%</h3>
             </div>
         </div>
       
@@ -124,7 +126,7 @@ const LegalCheckResult: React.FC<{ result: LegalQueryResult }> = ({ result }) =>
           </div>
           <div className="flex flex-col items-center">
               <CircularProgress score={accuracyScore} mode="legal" />
-              <h3 className="mt-1 text-sm font-medium text-text-secondary">Accuracy Score</h3>
+              <h3 className="mt-1 text-sm font-medium text-text-secondary">Confidence: {accuracyScore}%</h3>
           </div>
         </div>
 

@@ -20,7 +20,7 @@ interface SubmitData {
 const App: React.FC = () => {
   // UI State
   const [theme, setTheme] = useLocalStorage<Theme>('theme', 'dark');
-  const [activeModal, setActiveModal] = useState<'about' | 'feedback' | null>(null);
+  const [activeModal, setActiveModal] = useState<'info' | 'feedback' | null>(null);
   const historyRef = useRef<HTMLDivElement>(null);
 
   // Core App State
@@ -111,7 +111,7 @@ const App: React.FC = () => {
       <Header 
         theme={theme} 
         setTheme={setTheme}
-        onOpenAbout={() => setActiveModal('about')}
+        onOpenInfo={() => setActiveModal('info')}
         onOpenFeedback={() => setActiveModal('feedback')}
         onGoToHistory={handleGoToHistory}
       />
@@ -135,9 +135,17 @@ const App: React.FC = () => {
       <FloatingFeedbackButton onClick={() => setActiveModal('feedback')} />
       
       {/* Modals */}
-      <Modal isOpen={activeModal === 'about'} onClose={() => setActiveModal(null)} title="About Veritas AI">
-        <p>Veritas AI is an advanced assistant designed for detecting fake news and misinformation. Our goal is to provide clear, neutral, and evidence-based analysis to help you navigate the complex information landscape.</p>
-        <p>By providing not just a verdict but also the reasoning behind it, Veritas AI aims to be a transparent and trustworthy tool for promoting media literacy.</p>
+      <Modal isOpen={activeModal === 'info'} onClose={() => setActiveModal(null)} title="How Veritas AI Works">
+        <div className="space-y-3">
+            <p>Veritas AI uses an advanced AI model to analyze content for authenticity and factual accuracy. Here’s a simplified breakdown of the process:</p>
+            <ul className="list-disc list-inside space-y-2 pl-2">
+                <li><strong>Content Analysis:</strong> The AI reads the text, link, or document you provide, identifying the main claims and key points.</li>
+                <li><strong>Cross-Referencing:</strong> It then scours a vast dataset of trusted sources, including news articles, academic papers, and fact-checking databases, to find corroborating or conflicting information.</li>
+                <li><strong>Pattern Recognition:</strong> The model is trained to recognize patterns common in misinformation, such as emotionally charged language, logical fallacies, and signs of digital manipulation in media.</li>
+                <li><strong>Confidence Scoring:</strong> Based on the evidence found, the AI calculates a confidence score, giving you a clear indication of how reliable the information is.</li>
+            </ul>
+            <p>Our goal is to provide a transparent, evidence-based verdict to help you distinguish fact from fiction in a complex digital world.</p>
+        </div>
       </Modal>
       
       <FeedbackModal 

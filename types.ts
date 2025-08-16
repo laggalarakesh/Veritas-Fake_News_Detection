@@ -1,6 +1,6 @@
 
 export interface QueryResult {
-  result: 'Original' | 'Fake' | 'Insufficient data';
+  result: 'True' | 'False' | 'Insufficient data';
   confidence: 'High' | 'Medium' | 'Low' | 'N/A';
   detailedExplanation: string;
   accuracyScore: number;

@@ -1,8 +1,6 @@
 
 import React, { useState } from 'react';
 import Modal from './Modal';
-import { Feedback } from '../types';
-import useLocalStorage from '../hooks/useLocalStorage';
 import { UserIcon, EmailIcon } from './icons';
 
 interface FeedbackModalProps {
@@ -17,23 +15,28 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({ isOpen, onClose }) => {
   const [email, setEmail] = useState('');
   const [comments, setComments] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [feedbacks, setFeedbacks] = useLocalStorage<Feedback[]>('userFeedbacks', []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (rating === 0) {
-      // Could show a more styled error message
       return;
     }
 
-    const newFeedback: Feedback = {
-        rating,
-        name,
-        email,
-        comments,
-        timestamp: Date.now()
-    };
-    setFeedbacks([...feedbacks, newFeedback]);
+    const recipient = 'laggalarakesh8@gmail.com';
+    const subject = 'Veritas AI Feedback';
+    const body = `
+      Rating: ${rating}/5
+      Name: ${name || 'Not provided'}
+      Email: ${email || 'Not provided'}
+      
+      Comments:
+      ${comments}
+    `;
+
+    const mailtoLink = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body.trim())}`;
+    
+    window.location.href = mailtoLink;
+
     setIsSubmitted(true);
     
     // Reset form after a delay, then close modal

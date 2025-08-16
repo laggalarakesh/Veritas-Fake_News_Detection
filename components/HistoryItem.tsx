@@ -23,8 +23,8 @@ const HistoryCard: React.FC<HistoryCardProps> = ({ item, onSelect }) => {
         } else {
             const result = item.result as QueryResult;
             switch (result.result) {
-                case 'Original': return { text: result.result, color: 'border-neon-cyan text-neon-cyan' };
-                case 'Fake': return { text: result.result, color: 'border-neon-magenta text-neon-magenta' };
+                case 'True': return { text: 'True', color: 'border-neon-cyan text-neon-cyan' };
+                case 'False': return { text: 'Fake', color: 'border-neon-magenta text-neon-magenta' };
                 case 'Insufficient data': return { text: 'Insufficient Data', color: 'border-amber-500 text-amber-500' };
                 default: return { text: 'Unknown', color: 'border-gray-500 text-gray-500' };
             }
